@@ -30,20 +30,25 @@ export default class App extends Component {
     if (prevQuery !== nextQuery) {
       this.fetchImages();
     };
+  };
+
+  scrollDown = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: 'smooth',
     });
-  };
+  }
 
   fetchImages = () => {
     const { searchQuery, page } = this.state;
     this.setState({ loading: true });
-    imagesApi.fetchImagesWithQuery(searchQuery, page).then(images => this.setState(prevState => ({ images: [...prevState.images, ...images], page: prevState.page + 1, }))).catch(error => this.setState({ error: error })).finally(() => this.setState({ loading: false }))
+    imagesApi.fetchImagesWithQuery(searchQuery, page).then(images => this.setState(prevState => ({ images: [...prevState.images, ...images], page: prevState.page + 1, }))).then(() => this.scrollDown()).catch(error => this.setState({ error: error })).finally(() => this.setState({ loading: false }));
   };
 
+
+
   handleSearchbarSubmit = query => {
-    this.setState({ searchQuery: query, page: 1, images: [] })
+    this.setState({ searchQuery: query, page: 1, images: [] });
   };
 
   handleLargeImageUrl = e => {
